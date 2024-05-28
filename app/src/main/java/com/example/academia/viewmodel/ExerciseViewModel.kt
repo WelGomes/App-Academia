@@ -23,6 +23,10 @@ class ExerciseViewModel @Inject constructor(private val exerciseRepository: Exer
         return exerciseRepository.getExercises()
     }
 
+    fun updateExercises(id: String, name: String, imageUri: String, observation: String, listenerAuth: ListenerAuth) {
+        exerciseRepository.updateExercises(id, name, imageUri, observation, listenerAuth)
+    }
+
     fun deleteExercises(name: String, listenerAuth: ListenerAuth) {
         return exerciseRepository.deleteExercises(name, listenerAuth)
     }

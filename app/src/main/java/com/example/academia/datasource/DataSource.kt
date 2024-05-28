@@ -27,15 +27,19 @@ class DataSource @Inject constructor() {
         if(name.isEmpty() || imageUri.isEmpty()) {
             listenerAuth.onFailure("fill in the name and email and Image fields!")
         } else {
-            db.collection("exercises").add(exerciseMap).addOnCompleteListener {
-                listenerAuth.onSucess("Exercise saved", "exercisesScreen")
-            }.addOnFailureListener { exception ->
-                val error = when(exception) {
-                    is FirebaseNetworkException -> "No internet connection"
-                    else -> exception.message?: "Unknow error"
+            db.collection("exercises").document().run {
+                exerciseMap["id"] = id
+                set(exerciseMap).addOnCompleteListener {
+                    listenerAuth.onSucess("Exercise saved", "exercisesScreen")
+                }.addOnFailureListener { exception ->
+                    val error = when(exception) {
+                        is FirebaseNetworkException -> "No internet connection"
+                        else -> exception.message?: "Unknow error"
+                    }
+                    listenerAuth.onFailure(error)
                 }
-                listenerAuth.onFailure(error)
             }
+
         }
 
     }
@@ -44,7 +48,7 @@ class DataSource @Inject constructor() {
 
         val listExercise: MutableList<Exercise> = mutableListOf()
 
-        db.collection("exercises").get().addOnCompleteListener {querySnapshoot ->
+        db.collection("exercises").get().addOnCompleteListener { querySnapshoot ->
             if(querySnapshoot.isSuccessful) {
                 for (document in querySnapshoot.result) {
                     val exercise = document.toObject(Exercise::class.java)
@@ -54,35 +58,36 @@ class DataSource @Inject constructor() {
             }
         }
         return fullExercise
-
     }
 
-    fun deleteExercises(name: String, listenerAuth: ListenerAuth) {
 
-        val reference = db.collection("exercises").document(name)
+    fun updateExercises(id: String, name: String, imageUri: String, observation: String, listenerAuth: ListenerAuth) {
+        val updates = hashMapOf<String, Any>(
+            "name" to name,
+            "imageUri" to imageUri,
+            "observation" to observation
+        )
 
-        reference.get().addOnCompleteListener { document ->
-            if(document.isSuccessful) {
-                reference.delete().addOnCompleteListener {
-                    listenerAuth.onSucess("Exercise successfully deleted", "ExercisesScreen")
-                }.addOnFailureListener { exception ->
-                    val error = when(exception) {
-                        is FirebaseNetworkException -> "No internet connection"
-                        else -> exception.message ?: "Unknown error"
-                    }
-                    listenerAuth.onFailure(error)
-                }
-            } else {
-                listenerAuth.onFailure("The exercise does not exist")
-            }
-        }.addOnFailureListener { exception ->
+        db.collection("exercises").document(id).update(updates).addOnCompleteListener {
+            listenerAuth.onSucess("Successfully modified exercise", "exercisesScreen")
+        }.addOnFailureListener {
+            listenerAuth.onFailure("Failed to change exercise")
+        }
+    }
+
+
+    fun deleteExercises(id: String, listenerAuth: ListenerAuth) {
+        db.collection("exercises").document(id).delete().addOnCompleteListener {
+            listenerAuth.onSucess("Exercise successfully deleted", "ExercisesScreen")
+        }.addOnFailureListener {
+                exception ->
             val error = when(exception) {
                 is FirebaseNetworkException -> "No internet connection"
                 else -> exception.message ?: "Unknown error"
             }
             listenerAuth.onFailure(error)
         }
-
     }
+
 
 }

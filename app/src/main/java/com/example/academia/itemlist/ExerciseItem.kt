@@ -14,6 +14,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ fun ExerciseItem(
     val nameExercise = listExercise[position].name
     val imageUriExercise = listExercise[position].imageUri
     val observationExercise = listExercise[position].observation
+    val id = listExercise[position].id
 
     val scope = rememberCoroutineScope()
 
@@ -62,7 +64,7 @@ fun ExerciseItem(
                 .padding(20.dp)
         ) {
 
-            val (img, txtName, txtDescription, btnDelete) = createRefs()
+            val (img, txtName, txtDescription, btnDelete, btnUpdate) = createRefs()
 
             Image(
                 painter = rememberImagePainter(
@@ -100,7 +102,7 @@ fun ExerciseItem(
                     alertDialog.setTitle("Delete exercises")
                     alertDialog.setMessage("Do you want to delete the application?")
                     alertDialog.setPositiveButton("Yes") {_,_->
-                        exerciseViewModel.deleteExercises(nameExercise.toString(), object : ListenerAuth {
+                        exerciseViewModel.deleteExercises(id.toString(), object : ListenerAuth {
                             override fun onSucess(mensseger: String, screen: String) {
                                 Toast.makeText(context, mensseger, Toast.LENGTH_LONG).show()
                                 navController.navigate(screen)
@@ -121,7 +123,7 @@ fun ExerciseItem(
                 },
                 modifier = Modifier
                     .constrainAs(btnDelete) {
-                        start.linkTo(txtName.end, margin = 10.dp)
+                        start.linkTo(txtName.end, margin = 20.dp)
                         top.linkTo(parent.top, margin = 0.dp)
                         bottom.linkTo(parent.bottom, margin = 55.dp)
                     },
@@ -132,6 +134,25 @@ fun ExerciseItem(
                     tint = Color.Red
                 )
             }
+
+            IconButton(
+                onClick = {
+                    navController.navigate("updateExercisesScreen/${id}")
+                },
+                modifier = Modifier
+                    .constrainAs(btnUpdate) {
+                        start.linkTo(btnDelete.end, margin = 15.dp)
+                        top.linkTo(parent.top, margin = 0.dp)
+                        bottom.linkTo(parent.bottom, margin = 55.dp)
+                    },
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Update",
+                    tint = Color.Black
+                )
+            }
+
 
             Text(
                 text = observationExercise.toString(),

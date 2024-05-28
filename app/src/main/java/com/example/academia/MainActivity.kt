@@ -7,6 +7,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.academia.repository.ExerciseRepository
 import com.example.academia.ui.theme.AcademiaTheme
 import com.example.academia.view.Exercises
@@ -15,6 +16,7 @@ import com.example.academia.view.LoginScreen
 import com.example.academia.view.RegisterScreen
 import com.example.academia.view.SaveExercise
 import com.example.academia.view.SaveTrainingScreen
+import com.example.academia.view.UpdateExercisesScreen
 import com.example.academia.viewmodel.AuthViewModel
 import com.example.academia.viewmodel.ExerciseViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -29,6 +31,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val viewModel: AuthViewModel = hiltViewModel()
                 val exerciseViewModel: ExerciseViewModel = hiltViewModel()
+
                 NavHost(
                     navController = navController,
                     startDestination = "loginScreen"
@@ -56,6 +59,12 @@ class MainActivity : ComponentActivity() {
 
                     composable("saveTrainingScreen") {
                         SaveTrainingScreen(navController)
+                    }
+
+                    composable("updateExercisesScreen/{id}",
+                        arguments = listOf(navArgument("id"){})
+                        ) {
+                        UpdateExercisesScreen(navController, exerciseViewModel, it.arguments?.getString("id").toString())
                     }
 
                 }

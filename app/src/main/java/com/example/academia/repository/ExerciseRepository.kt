@@ -18,8 +18,12 @@ class ExerciseRepository @Inject constructor(private val dataSource: DataSource)
         return dataSource.getExercises()
     }
 
-    fun deleteExercises(name: String, listenerAuth: ListenerAuth) {
-        return dataSource.deleteExercises(name, listenerAuth)
+    fun updateExercises(id: String, name: String, imageUri: String, observation: String, listenerAuth: ListenerAuth) {
+        dataSource.updateExercises(id, name, imageUri, observation, listenerAuth)
+    }
+
+    fun deleteExercises(id: String, listenerAuth: ListenerAuth) {
+        return dataSource.deleteExercises(id, listenerAuth)
     }
 
 }
