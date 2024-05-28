@@ -3,7 +3,9 @@ package com.example.academia.itemlist
 import android.app.AlertDialog
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -35,19 +37,20 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CardExercices(
-    listExercise: MutableList<Exercise>,
-    position: Int
+    exercise: Exercise,
+    isSelected: Boolean,
+    onSelect: (Exercise) -> Unit
 ) {
 
-    val nameExercise = listExercise[position].name
-    val imageUriExercise = listExercise[position].imageUri
-    val observationExercise = listExercise[position].observation
+    val backgroundColor = if(isSelected) ORANGE else WHITE
 
     Card(
         backgroundColor = WHITE,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(10.dp)
+            .padding(20.dp)
+            .height(100.dp)
+            .clickable { onSelect(exercise) }
     ) {
 
         ConstraintLayout(
@@ -59,7 +62,7 @@ fun CardExercices(
 
             Image(
                 painter = rememberImagePainter(
-                    data = imageUriExercise,
+                    data = exercise.imageUri,
                     builder = {
                         crossfade(true)
                     }
@@ -75,7 +78,7 @@ fun CardExercices(
             )
 
             Text(
-                text = nameExercise.toString(),
+                text = exercise.name.toString(),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = ORANGE,
@@ -88,7 +91,7 @@ fun CardExercices(
             )
 
             Text(
-                text = observationExercise.toString(),
+                text = exercise.observation.toString(),
                 fontSize = 15.sp,
                 fontWeight = FontWeight.Bold,
                 color = BLACK,

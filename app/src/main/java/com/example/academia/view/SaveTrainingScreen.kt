@@ -9,9 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
@@ -21,7 +19,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DatePickerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
@@ -31,8 +28,10 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -40,17 +39,15 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.academia.components.ButtonCustom
 import com.example.academia.itemlist.CardExercices
-import com.example.academia.itemlist.ExerciseItem
 import com.example.academia.listener.ListenerAuth
+import com.example.academia.model.Exercise
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.viewmodel.ExerciseViewModel
+import com.example.academia.viewmodel.TrainingViewModel
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -61,17 +58,22 @@ import java.util.Locale
 @Composable
 fun SaveTrainingScreen(
     navController: NavController,
-    exerciseViewModel: ExerciseViewModel
+    exerciseViewModel: ExerciseViewModel,
+    trainingViewModel: TrainingViewModel
 ) {
+
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     var nameTraining by remember { mutableStateOf("") }
     var descriptionTraining by remember { mutableStateOf("") }
+    var selectedDate by remember { mutableStateOf("") }
+    val selectedExercises = remember { mutableStateListOf<Exercise>() }
 
     val focusManager = LocalFocusManager.current
     var showDatePickerDialog by remember { mutableStateOf(false) }
-
     val datePickerState = rememberDatePickerState()
-    var selectedDate by remember { mutableStateOf("") }
+
 
 
     if(showDatePickerDialog) {
@@ -125,7 +127,7 @@ fun SaveTrainingScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+
         ) {
 
             OutlinedTextField(
@@ -206,7 +208,19 @@ fun SaveTrainingScreen(
 
             ButtonCustom(
                 onClick = {
+                    scope.launch {
+                        trainingViewModel.setTraining(nameTraining, descriptionTraining, selectedDate, selectedExercises.toList(), object : ListenerAuth {
+                            override fun onSucess(mensseger: String, screen: String) {
+                                Toast.makeText(context, mensseger, Toast.LENGTH_SHORT).show()
+                                navController.navigate(screen)
+                            }
 
+                            override fun onFailure(error: String) {
+                                Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+                            }
+
+                        })
+                    }
                 },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -218,8 +232,19 @@ fun SaveTrainingScreen(
             val listExercise = exerciseViewModel.getExercises().collectAsState(mutableListOf()).value
 
             LazyColumn {
-                itemsIndexed(listExercise) { position,_ ->
-                    CardExercices(listExercise, position)
+                itemsIndexed(listExercise) { _, exercise ->
+                    val isSelected = selectedExercises.any { it.id == exercise.id }
+                    CardExercices(
+                        exercise ,
+                        isSelected,
+                        onSelect = { selectedExercise ->
+                            if(selectedExercises.contains(selectedExercise)) {
+                                selectedExercises.remove(selectedExercise)
+                            } else {
+                                selectedExercises.add(selectedExercise)
+                            }
+                        }
+                        )
                 }
             }
 

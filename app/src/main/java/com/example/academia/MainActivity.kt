@@ -19,6 +19,7 @@ import com.example.academia.view.SaveTrainingScreen
 import com.example.academia.view.UpdateExercisesScreen
 import com.example.academia.viewmodel.AuthViewModel
 import com.example.academia.viewmodel.ExerciseViewModel
+import com.example.academia.viewmodel.TrainingViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,6 +32,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val viewModel: AuthViewModel = hiltViewModel()
                 val exerciseViewModel: ExerciseViewModel = hiltViewModel()
+                val trainingViewModel: TrainingViewModel = hiltViewModel()
 
                 NavHost(
                     navController = navController,
@@ -58,7 +60,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("saveTrainingScreen") {
-                        SaveTrainingScreen(navController, exerciseViewModel)
+                        SaveTrainingScreen(navController, exerciseViewModel, trainingViewModel)
                     }
 
                     composable("updateExercisesScreen/{id}",
