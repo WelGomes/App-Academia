@@ -58,7 +58,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("saveTrainingScreen") {
-                        SaveTrainingScreen(navController)
+                        SaveTrainingScreen(navController, exerciseViewModel)
                     }
 
                     composable("updateExercisesScreen/{id}",

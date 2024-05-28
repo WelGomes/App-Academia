@@ -151,11 +151,3 @@ fun Home(
     }
 
 }
-
-
-
-@Preview
-@Composable
-fun HomePreview() {
-    Home(rememberNavController(),)
-}
