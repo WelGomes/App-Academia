@@ -62,16 +62,22 @@ class DataSource @Inject constructor() {
 
 
     fun updateExercises(id: String, name: String, imageUri: String, observation: String, listenerAuth: ListenerAuth) {
-        val updates = hashMapOf<String, Any>(
-            "name" to name,
-            "imageUri" to imageUri,
-            "observation" to observation
-        )
+        if(name.isEmpty() && imageUri.isEmpty() && observation.isEmpty()) {
+            listenerAuth.onSucess("", "exercisesScreen")
+        } else {
+            val updates = hashMapOf<String, Any>().apply {
+                when {
+                    (!name.isEmpty()) -> put("name", name)
+                    (!imageUri.isEmpty()) -> put("imageUri", imageUri)
+                    (!observation.isEmpty()) -> put("observation", observation)
+                }
+            }
 
-        db.collection("exercises").document(id).update(updates).addOnCompleteListener {
-            listenerAuth.onSucess("Successfully modified exercise", "exercisesScreen")
-        }.addOnFailureListener {
-            listenerAuth.onFailure("Failed to change exercise")
+            db.collection("exercises").document(id).update(updates).addOnCompleteListener {
+                listenerAuth.onSucess("Successfully modified exercise", "exercisesScreen")
+            }.addOnFailureListener {
+                listenerAuth.onFailure("Failed to change exercise")
+            }
         }
     }
 

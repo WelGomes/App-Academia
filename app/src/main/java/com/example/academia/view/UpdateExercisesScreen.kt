@@ -57,7 +57,7 @@ fun UpdateExercisesScreen(
 
     var nameExercise by remember { mutableStateOf("") }
     var observation by remember { mutableStateOf("") }
-    var img by remember { mutableStateOf<Uri?>(null) }
+    var img by remember { mutableStateOf("") }
 
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -66,7 +66,7 @@ fun UpdateExercisesScreen(
         contract = ActivityResultContracts.GetContent(),
         onResult = { uri ->
             uri?.let {
-                img = uri
+                img = uri.toString()
             }
         }
     )
