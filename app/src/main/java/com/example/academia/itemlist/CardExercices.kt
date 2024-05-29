@@ -42,10 +42,8 @@ fun CardExercices(
     onSelect: (Exercise) -> Unit
 ) {
 
-    val backgroundColor = if(isSelected) ORANGE else WHITE
-
     Card(
-        backgroundColor = WHITE,
+        backgroundColor = if(isSelected) ORANGE else WHITE,
         modifier = Modifier
             .fillMaxWidth()
             .padding(20.dp)
@@ -81,7 +79,7 @@ fun CardExercices(
                 text = exercise.name.toString(),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
-                color = ORANGE,
+                color = if(isSelected) WHITE else ORANGE,
                 modifier = Modifier
                     .constrainAs(txtName) {
                         start.linkTo(img.end, margin = 30.dp)

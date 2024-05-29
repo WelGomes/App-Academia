@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("home") {
-                        Home(navController, viewModel)
+                        Home(navController, viewModel, trainingViewModel)
                     }
 
                     composable("exercisesScreen") {

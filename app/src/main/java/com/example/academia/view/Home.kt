@@ -4,8 +4,11 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.BottomAppBar
@@ -33,17 +36,21 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.academia.R
+import com.example.academia.itemlist.CardExercices
+import com.example.academia.itemlist.TrainingCard
 import com.example.academia.ui.theme.BLACK
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.ui.theme.WHITE
 import com.example.academia.viewmodel.AuthViewModel
+import com.example.academia.viewmodel.TrainingViewModel
 import com.google.firebase.auth.FirebaseAuth
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Home(
     navController: NavController,
-    viewModel: AuthViewModel = hiltViewModel()
+    viewModel: AuthViewModel = hiltViewModel(),
+    trainingViewModel: TrainingViewModel = hiltViewModel()
 ) {
 
     val context = LocalContext.current
@@ -145,6 +152,21 @@ fun Home(
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
             )
+
+
+            val listTraining = trainingViewModel.getTraining().collectAsState(mutableListOf()).value
+
+            Column(
+                modifier = Modifier
+                    .padding(start = 20.dp, top = 100.dp, end = 20.dp)
+            ) {
+                LazyColumn {
+                    itemsIndexed(listTraining) { _, training ->
+                        TrainingCard(training)
+                    }
+                }
+            }
+
 
         }
 
