@@ -1,10 +1,6 @@
 package com.example.academia.view
 
-import android.annotation.SuppressLint
-import android.net.Uri
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,52 +24,22 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.academia.components.ButtonCustom
 import com.example.academia.listener.ListenerAuth
-import com.example.academia.model.Exercise
 import com.example.academia.ui.theme.ORANGE
-import com.example.academia.viewmodel.ExerciseViewModel
 import kotlinx.coroutines.launch
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun UpdateExercisesScreen(
-    navController: NavController,
-    exerciseViewModel: ExerciseViewModel,
-    id: String,
-    name: String,
-    imageUri: String,
-    observation: String,
+fun UpdateTrainingScreen(
+    navController: NavController
 ) {
-
-    var nameExercise by remember { mutableStateOf(name) }
-    var observationExercise by remember { mutableStateOf(observation) }
-    var img by remember { mutableStateOf(imageUri) }
-
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
-
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri ->
-            uri?.let {
-                img = uri.toString()
-            }
-        }
-    )
 
     Scaffold(
         topBar = {
@@ -216,5 +182,6 @@ fun UpdateExercisesScreen(
 
         }
     }
+
 
 }

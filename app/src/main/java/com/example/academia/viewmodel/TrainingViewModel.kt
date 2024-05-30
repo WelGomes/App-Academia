@@ -24,8 +24,8 @@ class TrainingViewModel @Inject constructor(private val trainingViewModel: Train
         return trainingViewModel.getTraining()
     }
 
-    fun deleteTraining(listenerAuth: ListenerAuth) {
-        trainingViewModel.deleteTraining(listenerAuth)
+    fun deleteTraining(trainingId: String, listenerAuth: ListenerAuth) {
+        trainingViewModel.deleteTraining(trainingId, listenerAuth)
     }
 
 }

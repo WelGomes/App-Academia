@@ -4,6 +4,9 @@ import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -11,22 +14,28 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.example.academia.listener.ListenerAuth
 import com.example.academia.model.Exercise
 import com.example.academia.ui.theme.BLACK
@@ -35,6 +44,8 @@ import com.example.academia.ui.theme.WHITE
 import com.example.academia.viewmodel.ExerciseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 @Composable
 fun ExerciseItem(
@@ -50,9 +61,15 @@ fun ExerciseItem(
     val observationExercise = listExercise[position].observation
     val id = listExercise[position].id
 
+    //val encodedUrl = URLEncoder.encode(imageUriExercise, StandardCharsets.UTF_8.toString())
+
+
     val scope = rememberCoroutineScope()
+    /*ExerciseItem2(title = nameExercise.orEmpty(), imageUrl = imageUriExercise.orEmpty(), description = observationExercise.orEmpty(), onEditClick = {
+        navController.navigate("updateExercisesScreen/${id}/${nameExercise}/${encodedUrl}/${observationExercise}")
 
-
+    }, onDeleteClick = {})
+    */
     Card(
         backgroundColor = WHITE,
         modifier = Modifier
@@ -68,11 +85,11 @@ fun ExerciseItem(
             val (img, txtName, txtDescription, btnDelete, btnUpdate) = createRefs()
 
             Image(
-                painter = rememberImagePainter(
-                    data = imageUriExercise,
-                    builder = {
-                        crossfade(true)
-                    }
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = imageUriExercise)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
                 ),
                 contentDescription = null,
                 modifier = Modifier
@@ -85,7 +102,7 @@ fun ExerciseItem(
             )
 
             Text(
-                text = nameExercise.toString(),
+                text = nameExercise.orEmpty(),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = ORANGE,
@@ -136,9 +153,11 @@ fun ExerciseItem(
                 )
             }
 
+            val encodedUrl = URLEncoder.encode(imageUriExercise, StandardCharsets.UTF_8.toString())
+
             IconButton(
                 onClick = {
-                    navController.navigate("updateExercisesScreen/${id}")
+                    navController.navigate("updateExercisesScreen/${id}/${nameExercise}/${encodedUrl}/${observationExercise}")
                 },
                 modifier = Modifier
                     .constrainAs(btnUpdate) {
@@ -174,3 +193,54 @@ fun ExerciseItem(
     }
 
 }
+
+
+/*
+@Composable
+fun ExerciseItem2(
+    imageUrl: String,
+    title: String,
+    description: String,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit
+) {
+    Card(
+        elevation = 4.dp,
+        backgroundColor = MaterialTheme.colors.surface,
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Row(modifier = Modifier.padding(16.dp)) {
+            // Image aligned to start top
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
+                ),
+                contentDescription = null,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .size(60.dp)
+            )
+
+            Spacer(modifier = Modifier.padding(8.dp))
+
+            Column(modifier = Modifier.weight(1f)) {
+                // Title
+                Text(text = title, style = MaterialTheme.typography.h6)
+
+                // Description
+                Text(text = description, style = MaterialTheme.typography.body2)
+            }
+
+            // Edit and Delete Icons
+            IconButton(onClick = onEditClick) {
+                Icon(Icons.Default.Edit, contentDescription = "Edit Training")
+            }
+            IconButton(onClick = onDeleteClick) {
+                Icon(Icons.Default.Delete, contentDescription = "Delete Training")
+            }
+        }
+    }
+}*/

@@ -41,6 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.academia.R
 import com.example.academia.itemlist.CardExercices
 import com.example.academia.itemlist.TrainingCard
+import com.example.academia.model.Training
 import com.example.academia.ui.theme.BLACK
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.ui.theme.WHITE
@@ -103,17 +104,10 @@ fun Home(
                 },
                 backgroundColor = ORANGE
             ) {
-                if(listTraining.isEmpty()) {
-                    Icon(
-                        imageVector = Icons.Default.Add,
-                        contentDescription = "Add Training"
-                    )
-                } else {
-                    Icon(
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = "Update"
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add Training"
+                )
             }
         },
         bottomBar = {

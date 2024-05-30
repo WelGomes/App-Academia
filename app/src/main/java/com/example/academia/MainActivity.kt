@@ -17,6 +17,7 @@ import com.example.academia.view.RegisterScreen
 import com.example.academia.view.SaveExercise
 import com.example.academia.view.SaveTrainingScreen
 import com.example.academia.view.UpdateExercisesScreen
+import com.example.academia.view.UpdateTrainingScreen
 import com.example.academia.viewmodel.AuthViewModel
 import com.example.academia.viewmodel.ExerciseViewModel
 import com.example.academia.viewmodel.TrainingViewModel
@@ -63,10 +64,27 @@ class MainActivity : ComponentActivity() {
                         SaveTrainingScreen(navController, exerciseViewModel, trainingViewModel)
                     }
 
-                    composable("updateExercisesScreen/{id}",
-                        arguments = listOf(navArgument("id"){})
-                        ) {
-                        UpdateExercisesScreen(navController, exerciseViewModel, it.arguments?.getString("id").toString())
+                    composable(
+                        "updateExercisesScreen/{id}/{name}/{imageUri}/{observation}",
+                        arguments = listOf(
+                            navArgument("id") { defaultValue = "" },
+                            navArgument("name") { defaultValue = "" },
+                            navArgument("imageUri") { defaultValue = "" },
+                            navArgument("observation") { defaultValue = "" },
+                        )
+                    ) {
+                        UpdateExercisesScreen(
+                            navController,
+                            exerciseViewModel,
+                            id = it.arguments?.getString("id").toString(),
+                            name = it.arguments?.getString("name").toString(),
+                            imageUri = it.arguments?.getString("imageUri").toString(),
+                            observation = it.arguments?.getString("observation").toString(),
+                        )
+                    }
+
+                    composable("updateTrainingScreen") {
+                        UpdateTrainingScreen(navController)
                     }
 
                 }

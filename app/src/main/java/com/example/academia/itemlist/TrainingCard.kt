@@ -15,6 +15,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,14 +47,15 @@ fun TrainingCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
-                .height(200.dp)
+                .height(200.dp),
+            backgroundColor = Color.Gray
         ) {
 
             ConstraintLayout(
                 modifier = Modifier
                     .padding(20.dp)
             ) {
-                val (txtNameTraining, btnDelete, txtDescription, txtDate) = createRefs()
+                val (txtNameTraining, btnUpdate, btnDelete, txtDescription, txtDate) = createRefs()
 
                 Text(
                     text = "Date - ${training.date.toString()}",
@@ -69,11 +71,27 @@ fun TrainingCard(
 
                 IconButton(
                     onClick = {
+                        navController.navigate("updateTrainingScreen")
+                    },
+                    modifier = Modifier
+                        .constrainAs(btnUpdate) {
+                            start.linkTo(txtDate.start, margin = 200.dp)
+                        },
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Update",
+                        tint = Color.Black
+                    )
+                }
+
+                IconButton(
+                    onClick = {
                         val alertDialog = AlertDialog.Builder(context)
                         alertDialog.setTitle("Delete exercises")
                         alertDialog.setMessage("Do you want to delete the application?")
                         alertDialog.setPositiveButton("Yes") {_,_->
-                            listTraining.deleteTraining(object : ListenerAuth {
+                            listTraining.deleteTraining(training.id.orEmpty() ,object : ListenerAuth {
                                 override fun onSucess(mensseger: String, screen: String) {
                                     Toast.makeText(context, mensseger, Toast.LENGTH_SHORT).show()
                                     navController.navigate(screen)
@@ -89,7 +107,7 @@ fun TrainingCard(
                     },
                     modifier = Modifier
                         .constrainAs(btnDelete) {
-                            end.linkTo(parent.end, margin = 0.dp)
+                            start.linkTo(btnUpdate.end, margin = -6.dp)
                         },
                 ) {
                     Icon(
@@ -98,6 +116,8 @@ fun TrainingCard(
                         tint = Color.Red
                     )
                 }
+
+
 
                 Text(
                     text = training.name.toString(),
@@ -124,8 +144,6 @@ fun TrainingCard(
                             end.linkTo(parent.end, margin = 50.dp)
                         }
                 )
-
-
 
             }
         }
