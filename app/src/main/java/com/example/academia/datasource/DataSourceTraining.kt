@@ -4,6 +4,7 @@ import androidx.compose.runtime.State
 import com.example.academia.listener.ListenerAuth
 import com.example.academia.model.Exercise
 import com.example.academia.model.Training
+import com.google.firebase.FirebaseNetworkException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.Flow
@@ -28,8 +29,8 @@ class DataSourceTraining @Inject constructor() {
             "exercise" to exercise
         )
 
-        if(name.isEmpty()) {
-            listenerAuth.onFailure("Put at least the name")
+        if(name.isEmpty() || exercise.isEmpty()) {
+            listenerAuth.onFailure("Put at least the name and exercise")
         }else {
             if(auth != null) {
                 val uid = auth.uid
@@ -49,18 +50,36 @@ class DataSourceTraining @Inject constructor() {
     fun getTraining(): Flow<MutableList<Training>> {
 
         val listTraining: MutableList<Training> = mutableListOf()
+        val uid = auth?.uid
 
         db.collection("training").get().addOnCompleteListener { querySnapshot ->
             if(querySnapshot.isSuccessful) {
                 for(documnet in querySnapshot.result) {
                     val training = documnet.toObject(Training::class.java)
                     listTraining.add(training)
-                    _fullTraining.value = listTraining
                 }
+                _fullTraining.value = listTraining
             }
         }
 
         return fullTraining
+    }
+
+    fun deleteTraining(listenerAuth: ListenerAuth) {
+
+        val uid = auth?.uid
+
+        if (uid != null) {
+            db.collection("training").document(uid).delete().addOnCompleteListener {
+                listenerAuth.onSucess("Workout successfully deleted", "home")
+            }.addOnFailureListener { exception ->
+                val error = when(exception) {
+                    is FirebaseNetworkException -> "No internet connection"
+                    else -> exception.message ?: "Unknown error"
+                }
+                listenerAuth.onFailure(error)
+            }
+        }
     }
 
 }

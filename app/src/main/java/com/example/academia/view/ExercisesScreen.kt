@@ -157,24 +157,23 @@ fun Exercises(
 
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
                     .fillMaxSize()
-                    .padding(top = 100.dp),
+                    .padding(top = 0.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(top = 50.dp)
+                ) {
 
-            }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(top = 100.dp)
-            ) {
+                    itemsIndexed(listExercise) {position,_ ->
+                        ExerciseItem(navController, position, listExercise, context, hiltViewModel())
+                    }
 
-                itemsIndexed(listExercise) {position,_ ->
-                    ExerciseItem(navController, position, listExercise, context, hiltViewModel())
                 }
-
             }
+
 
         }
 

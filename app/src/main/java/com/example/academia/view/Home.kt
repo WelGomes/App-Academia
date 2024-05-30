@@ -3,6 +3,8 @@ package com.example.academia.view
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.ScrollState
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,6 +19,7 @@ import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -56,6 +59,7 @@ fun Home(
     val context = LocalContext.current
     val nameUser = viewModel.perfilUser().collectAsState(initial = "").value
 
+    val listTraining = trainingViewModel.getTraining().collectAsState(mutableListOf()).value
 
     Scaffold(
         topBar = {
@@ -99,10 +103,17 @@ fun Home(
                 },
                 backgroundColor = ORANGE
             ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Training"
-                )
+                if(listTraining.isEmpty()) {
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add Training"
+                    )
+                } else {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Update"
+                    )
+                }
             }
         },
         bottomBar = {
@@ -154,15 +165,13 @@ fun Home(
             )
 
 
-            val listTraining = trainingViewModel.getTraining().collectAsState(mutableListOf()).value
-
             Column(
                 modifier = Modifier
                     .padding(start = 20.dp, top = 100.dp, end = 20.dp)
             ) {
                 LazyColumn {
                     itemsIndexed(listTraining) { _, training ->
-                        TrainingCard(training)
+                        TrainingCard(navController ,training, context, hiltViewModel())
                     }
                 }
             }
