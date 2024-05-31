@@ -61,49 +61,6 @@ fun ExerciseItem(
 
     val scope = rememberCoroutineScope()
 
-    ExerciseItem2(
-        imageUriExercise.orEmpty(),
-        nameExercise.orEmpty(),
-        observationExercise.orEmpty(),
-        onEditClick = {
-            val encodedUrl = URLEncoder.encode(imageUriExercise, StandardCharsets.UTF_8.toString())
-            navController.navigate("updateExercisesScreen/${id}/${nameExercise}/${encodedUrl}/${observationExercise}")
-        },
-        onDeleteClick = {
-            val alertDialog = AlertDialog.Builder(context)
-            alertDialog.setTitle("Delete exercises")
-            alertDialog.setMessage("Do you want to delete the application?")
-            alertDialog.setPositiveButton("Yes") {_,_->
-                exerciseViewModel.deleteExercises(id.toString(), object : ListenerAuth {
-                    override fun onSucess(mensseger: String, screen: String) {
-                        Toast.makeText(context, mensseger, Toast.LENGTH_LONG).show()
-                        navController.navigate(screen)
-                    }
-
-                    override fun onFailure(error: String) {
-                        Toast.makeText(context, error, Toast.LENGTH_LONG).show()
-                    }
-
-                })
-
-                scope.launch(Dispatchers.Main) {
-                    listExercise.removeAt(position)
-                    navController.navigate("exercisesScreen")
-                }
-            }
-            alertDialog.setNegativeButton("No") {_,_->}.show()
-        })
-}
-
-
-@Composable
-fun ExerciseItem2(
-    imageUriExercise: String,
-    title: String,
-    description: String,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit
-) {
     Card(
         elevation = 4.dp,
         backgroundColor = MaterialTheme.colors.surface,
@@ -126,18 +83,52 @@ fun ExerciseItem2(
             Spacer(modifier = Modifier.padding(horizontal = 8.dp))
 
             Column(modifier = Modifier.weight(1f)) {
-                // Title
-                Text(text = title, style = MaterialTheme.typography.h6)
+                Text(
+                    text = nameExercise.orEmpty(),
+                    style = MaterialTheme.typography.h6
+                )
 
-                // Description
-                Text(text = description, style = MaterialTheme.typography.body2)
+                Text(
+                    text = observationExercise.orEmpty(),
+                    style = MaterialTheme.typography.body2
+                )
             }
 
-            // Edit and Delete Icons
-            IconButton(onClick = onEditClick) {
+            val encodedUrl = URLEncoder.encode(imageUriExercise, StandardCharsets.UTF_8.toString())
+
+            IconButton(
+                onClick = {
+                    navController.navigate("updateExercisesScreen/${id}/${nameExercise}/${encodedUrl}/${observationExercise}")
+                }
+            ) {
                 Icon(Icons.Default.Edit, contentDescription = "Edit Training")
             }
-            IconButton(onClick = onDeleteClick) {
+            IconButton(
+                onClick = {
+                    val alertDialog = AlertDialog.Builder(context)
+                    alertDialog.setTitle("Delete exercises")
+                    alertDialog.setMessage("Do you want to delete the application?")
+                    alertDialog.setPositiveButton("Yes") { _, _ ->
+                        exerciseViewModel.deleteExercises(id.toString(), object : ListenerAuth {
+                            override fun onSucess(mensseger: String, screen: String) {
+                                Toast.makeText(context, mensseger, Toast.LENGTH_LONG).show()
+                                navController.navigate(screen)
+                            }
+
+                            override fun onFailure(error: String) {
+                                Toast.makeText(context, error, Toast.LENGTH_LONG).show()
+                            }
+
+                        })
+
+                        scope.launch(Dispatchers.Main) {
+                            listExercise.removeAt(position)
+                            navController.navigate("exercisesScreen")
+                        }
+                    }
+                    alertDialog.setNegativeButton("No") { _, _ -> }.show()
+                }
+            ) {
                 Icon(
                     Icons.Default.Delete, contentDescription = "Delete Training",
                     tint = Color.Red
