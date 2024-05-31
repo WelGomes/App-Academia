@@ -35,12 +35,17 @@ import com.example.academia.viewmodel.TrainingViewModel
 @Composable
 fun TrainingCard(
     navController: NavController,
-    training: Training,
+    position: Int,
+    listTraining: MutableList<Training>,
     context: Context,
-    listTraining: TrainingViewModel
+    trainingView: TrainingViewModel
 ) {
 
-    val firstExercise = training.exercise?.firstOrNull()
+    val nameTraining = listTraining[position].name
+    val descriptionTraining = listTraining[position].description
+    val dateTraining = listTraining[position].date
+    val exercisesTraining = listTraining[position].exercise
+    val idTraining = listTraining[position].id
 
     Column {
         Card(
@@ -58,7 +63,7 @@ fun TrainingCard(
                 val (txtNameTraining, btnUpdate, btnDelete, txtDescription, txtDate) = createRefs()
 
                 Text(
-                    text = "Date - ${training.date.toString()}",
+                    text = "Date - ${dateTraining.orEmpty()}",
                     fontSize = 13.sp,
                     fontWeight = FontWeight.Bold,
                     color = BLACK,
@@ -71,7 +76,7 @@ fun TrainingCard(
 
                 IconButton(
                     onClick = {
-                        navController.navigate("updateTrainingScreen")
+                        navController.navigate("updateTrainingScreen/${idTraining}/${nameTraining}/${descriptionTraining}/${dateTraining}")
                     },
                     modifier = Modifier
                         .constrainAs(btnUpdate) {
@@ -91,7 +96,7 @@ fun TrainingCard(
                         alertDialog.setTitle("Delete exercises")
                         alertDialog.setMessage("Do you want to delete the application?")
                         alertDialog.setPositiveButton("Yes") {_,_->
-                            listTraining.deleteTraining(training.id.orEmpty() ,object : ListenerAuth {
+                            trainingView.deleteTraining(idTraining.orEmpty() ,object : ListenerAuth {
                                 override fun onSucess(mensseger: String, screen: String) {
                                     Toast.makeText(context, mensseger, Toast.LENGTH_SHORT).show()
                                     navController.navigate(screen)
@@ -120,7 +125,7 @@ fun TrainingCard(
 
 
                 Text(
-                    text = training.name.toString(),
+                    text = nameTraining.orEmpty(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     color = ORANGE,
@@ -133,7 +138,7 @@ fun TrainingCard(
                 )
 
                 Text(
-                    text = training.description.toString(),
+                    text = descriptionTraining.orEmpty(),
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                     color = BLACK,
@@ -148,7 +153,7 @@ fun TrainingCard(
             }
         }
 
-        training.exercise?.forEach() { index->
+        exercisesTraining?.forEach() { index->
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -175,7 +180,7 @@ fun TrainingCard(
                             }
                     )
 
-                    if (firstExercise != null) {
+                    if (exercisesTraining != null) {
                         androidx.compose.foundation.Image(
                             painter = rememberImagePainter(
                                 data = index.imageUri,

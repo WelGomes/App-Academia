@@ -19,13 +19,7 @@ class DataSourceTraining @Inject constructor() {
 
     private val _fullTraining = MutableStateFlow<MutableList<Training>>(mutableListOf())
 
-    fun setTraining(
-        name: String,
-        description: String,
-        date: String,
-        exercise: List<Exercise>,
-        listenerAuth: ListenerAuth
-    ) {
+    fun setTraining(name: String, description: String, date: String, exercise: List<Exercise>, listenerAuth: ListenerAuth) {
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
@@ -60,7 +54,6 @@ class DataSourceTraining @Inject constructor() {
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return _fullTraining
 
-
         db.collection("training").document(userId).collection("training_user").get()
             .addOnSuccessListener {
                 val listTraining: MutableList<Training> = mutableListOf()
@@ -77,11 +70,38 @@ class DataSourceTraining @Inject constructor() {
 
     }
 
+
+    fun updateTraining(id: String, name: String, description: String, date: String, exercise: List<Exercise>, listenerAuth: ListenerAuth) {
+
+        val userId = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+
+        if (name.isEmpty() || exercise.isEmpty()) {
+            listenerAuth.onFailure("Put at least the name and exercise")
+        } else {
+            val updates = hashMapOf<String, Any>().apply {
+                when {
+                    (name.isNotEmpty()) -> put("name", name)
+                    (description.isNotEmpty()) -> put("description", description)
+                    (date.isNotEmpty()) -> put("date", date)
+                    (exercise.isNotEmpty()) -> put("exercise", exercise)
+                }
+            }
+            db.collection("training").document(userId).collection("training_user").document(id).update(updates).addOnCompleteListener {
+                listenerAuth.onSucess("Treino modificado com sucesso", "home")
+            }.addOnFailureListener {
+                listenerAuth.onFailure("Falha ao modificar o treino")
+            }
+        }
+    }
+
+
     fun deleteTraining(trainingId: String, listenerAuth: ListenerAuth) {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
         if (userId != null) {
-            db.collection("training").document(userId).collection("training_user").document(trainingId).delete()
+            db.collection("training").document(userId).collection("training_user")
+                .document(trainingId).delete()
                 .addOnCompleteListener {
                     if (it.isSuccessful) {
                         listenerAuth.onSucess("Treino excluído com sucesso", "home")
@@ -96,7 +116,7 @@ class DataSourceTraining @Inject constructor() {
                     }
                     listenerAuth.onFailure(error)
                 }
-            }
+
         }
     }
 

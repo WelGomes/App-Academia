@@ -61,15 +61,8 @@ fun ExerciseItem(
     val observationExercise = listExercise[position].observation
     val id = listExercise[position].id
 
-    //val encodedUrl = URLEncoder.encode(imageUriExercise, StandardCharsets.UTF_8.toString())
-
-
     val scope = rememberCoroutineScope()
-    /*ExerciseItem2(title = nameExercise.orEmpty(), imageUrl = imageUriExercise.orEmpty(), description = observationExercise.orEmpty(), onEditClick = {
-        navController.navigate("updateExercisesScreen/${id}/${nameExercise}/${encodedUrl}/${observationExercise}")
 
-    }, onDeleteClick = {})
-    */
     Card(
         backgroundColor = WHITE,
         modifier = Modifier
@@ -193,54 +186,3 @@ fun ExerciseItem(
     }
 
 }
-
-
-/*
-@Composable
-fun ExerciseItem2(
-    imageUrl: String,
-    title: String,
-    description: String,
-    onEditClick: () -> Unit,
-    onDeleteClick: () -> Unit
-) {
-    Card(
-        elevation = 4.dp,
-        backgroundColor = MaterialTheme.colors.surface,
-        modifier = Modifier.padding(16.dp)
-    ) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            // Image aligned to start top
-            Image(
-                painter = rememberAsyncImagePainter(
-                    ImageRequest.Builder(LocalContext.current).data(data = imageUrl)
-                        .apply(block = fun ImageRequest.Builder.() {
-                            crossfade(true)
-                        }).build()
-                ),
-                contentDescription = null,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .size(60.dp)
-            )
-
-            Spacer(modifier = Modifier.padding(8.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-                // Title
-                Text(text = title, style = MaterialTheme.typography.h6)
-
-                // Description
-                Text(text = description, style = MaterialTheme.typography.body2)
-            }
-
-            // Edit and Delete Icons
-            IconButton(onClick = onEditClick) {
-                Icon(Icons.Default.Edit, contentDescription = "Edit Training")
-            }
-            IconButton(onClick = onDeleteClick) {
-                Icon(Icons.Default.Delete, contentDescription = "Delete Training")
-            }
-        }
-    }
-}*/

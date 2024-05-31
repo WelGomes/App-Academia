@@ -24,6 +24,10 @@ class TrainingViewModel @Inject constructor(private val trainingViewModel: Train
         return trainingViewModel.getTraining()
     }
 
+    fun updateTraining(id: String, name: String, description: String, date: String, exercise: List<Exercise>, listenerAuth: ListenerAuth) {
+        trainingViewModel.updateTraining(id, name, description, date, exercise, listenerAuth)
+    }
+
     fun deleteTraining(trainingId: String, listenerAuth: ListenerAuth) {
         trainingViewModel.deleteTraining(trainingId, listenerAuth)
     }

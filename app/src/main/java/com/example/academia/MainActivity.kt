@@ -83,8 +83,25 @@ class MainActivity : ComponentActivity() {
                         )
                     }
 
-                    composable("updateTrainingScreen") {
-                        UpdateTrainingScreen(navController)
+                    composable(
+                        "updateTrainingScreen/{idTraining}/{nameTraining}/{descriptionTraining}/{dateTraining}",
+                        arguments = listOf(
+                            navArgument("idTraining") { defaultValue = "" },
+                            navArgument("nameTraining") { defaultValue = "" },
+                            navArgument("descriptionTraining") { defaultValue = "" },
+                            navArgument("dateTraining") { defaultValue = "" },
+                            navArgument("exercisesTraining") { defaultValue = "" },
+                        )
+                    ) {
+                        UpdateTrainingScreen(
+                            navController,
+                            trainingViewModel,
+                            exerciseViewModel,
+                            id = it.arguments?.getString("idTraining").toString(),
+                            name = it.arguments?.getString("nameTraining").toString(),
+                            description = it.arguments?.getString("descriptionTraining").toString(),
+                            date = it.arguments?.getString("dateTraining").toString()
+                            )
                     }
 
                 }

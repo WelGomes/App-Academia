@@ -46,6 +46,7 @@ import com.example.academia.ui.theme.BLACK
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.ui.theme.WHITE
 import com.example.academia.viewmodel.AuthViewModel
+import com.example.academia.viewmodel.ExerciseViewModel
 import com.example.academia.viewmodel.TrainingViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -54,7 +55,7 @@ import com.google.firebase.auth.FirebaseAuth
 fun Home(
     navController: NavController,
     viewModel: AuthViewModel = hiltViewModel(),
-    trainingViewModel: TrainingViewModel = hiltViewModel()
+    trainingViewModel: TrainingViewModel = hiltViewModel(),
 ) {
 
     val context = LocalContext.current
@@ -164,8 +165,8 @@ fun Home(
                     .padding(start = 20.dp, top = 100.dp, end = 20.dp)
             ) {
                 LazyColumn {
-                    itemsIndexed(listTraining) { _, training ->
-                        TrainingCard(navController ,training, context, hiltViewModel())
+                    itemsIndexed(listTraining) { position,_ ->
+                        TrainingCard(navController ,position, listTraining, context, hiltViewModel())
                     }
                 }
             }

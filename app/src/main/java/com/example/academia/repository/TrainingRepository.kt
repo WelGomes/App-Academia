@@ -19,6 +19,10 @@ class TrainingRepository @Inject constructor(private val dataSourceTraining: Dat
         return dataSourceTraining.getTraining()
     }
 
+    fun updateTraining(id: String, name: String, description: String, date: String, exercise: List<Exercise>, listenerAuth: ListenerAuth) {
+        dataSourceTraining.updateTraining(id, name, description, date, exercise, listenerAuth)
+    }
+
     fun deleteTraining(trainingId: String, listenerAuth: ListenerAuth) {
         dataSourceTraining.deleteTraining(trainingId, listenerAuth)
     }
