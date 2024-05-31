@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.academia.repository.ExerciseRepository
 import com.example.academia.ui.theme.AcademiaTheme
 import com.example.academia.view.Exercises
 import com.example.academia.view.Home

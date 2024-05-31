@@ -1,7 +1,5 @@
 package com.example.academia.itemlist
 
-import android.app.AlertDialog
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -10,30 +8,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Card
-import androidx.compose.material.FabPosition
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
-import coil.compose.rememberImagePainter
-import com.example.academia.listener.ListenerAuth
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.academia.model.Exercise
 import com.example.academia.ui.theme.BLACK
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.ui.theme.WHITE
-import com.example.academia.viewmodel.ExerciseViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Composable
 fun CardExercices(
@@ -59,11 +48,11 @@ fun CardExercices(
             val (img, txtName, txtDescription) = createRefs()
 
             Image(
-                painter = rememberImagePainter(
-                    data = exercise.imageUri,
-                    builder = {
-                        crossfade(true)
-                    }
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current).data(data = exercise.imageUri)
+                        .apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
                 ),
                 contentDescription = null,
                 modifier = Modifier

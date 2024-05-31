@@ -48,7 +48,6 @@ import com.example.academia.components.OutlinedTextFieldCustom
 import com.example.academia.listener.ListenerAuth
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.viewmodel.AuthViewModel
-import java.io.Serializable
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable

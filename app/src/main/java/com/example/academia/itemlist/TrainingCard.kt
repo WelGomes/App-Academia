@@ -20,12 +20,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.navigation.NavController
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.academia.listener.ListenerAuth
 import com.example.academia.model.Training
 import com.example.academia.ui.theme.BLACK
@@ -182,11 +184,11 @@ fun TrainingCard(
 
                     if (exercisesTraining != null) {
                         androidx.compose.foundation.Image(
-                            painter = rememberImagePainter(
-                                data = index.imageUri,
-                                builder = {
-                                    crossfade(true)
-                                }
+                            painter = rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current)
+                                    .data(data = index.imageUri).apply(block = fun ImageRequest.Builder.() {
+                                        crossfade(true)
+                                    }).build()
                             ),
                             contentDescription = null,
                             modifier = Modifier

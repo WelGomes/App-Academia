@@ -1,7 +1,6 @@
 package com.example.academia.view
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -43,7 +42,6 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.academia.components.ButtonCustom
 import com.example.academia.listener.ListenerAuth
-import com.example.academia.model.Exercise
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.viewmodel.ExerciseViewModel
 import kotlinx.coroutines.launch

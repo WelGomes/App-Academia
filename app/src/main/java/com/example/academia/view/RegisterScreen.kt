@@ -37,7 +37,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.academia.R
 import com.example.academia.components.ButtonCustom
@@ -45,8 +44,6 @@ import com.example.academia.components.OutlinedTextFieldCustom
 import com.example.academia.listener.ListenerAuth
 import com.example.academia.ui.theme.ORANGE
 import com.example.academia.viewmodel.AuthViewModel
-import com.example.academia.viewmodel.ExerciseViewModel
-import java.io.Serializable
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
